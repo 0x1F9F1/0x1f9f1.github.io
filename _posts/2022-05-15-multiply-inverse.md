@@ -18,18 +18,17 @@ Instead, let's choose a simpler number and go back to basics.
 ## Binary Multiplication
 
 Lets say you want to calculate `uint8_t y = x * 0x45`, but without using multiplication.
-If you inspect the binary representation of 0x45, you get:
+If you inspect the binary representation of `0x45`, you get:
 ```py
 >>> bin(0x45)
 '0b1000101'
 ```
 That is to say: `0x45 == 0b1 + 0b100 + 0b1000000`.
 
-Now if you remember from Algebra that `(a + b) * c = (a * c) + (b * c)`, you could instead write `uint8_t y = x * 0x45` as: `uint8_t y = (x * 0b1) + (x * 0b100) + (x * 0b1000000)`.
+Now if you remember from algebra that `(a + b) * c = (a * c) + (b * c)`, you could instead write `uint8_t y = x * 0x45` as: `uint8_t y = (x * 0b1) + (x * 0b100) + (x * 0b1000000)`.
 That still uses multiplications, but since each of those numbers are powers of two, they can be replaced with bit-shifts: `uint8_t y = (x << 0) + (x << 2) + (x << 6)`.
 
 Why is this useful? Well if you think back to the original question, what you really want to find is a way to remove all those extra bit-shifted copies of the original number that were added together during the multiplication.
-For `0x45`, that means getting rid of the `(x << 2) + (x << 6)`.
 
 ## Carry, carry, carry!
 
