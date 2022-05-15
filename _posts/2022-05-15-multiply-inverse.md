@@ -26,9 +26,9 @@ If you inspect the binary representation of 0x45, you get:
 That is to say: `0x45 == 0b1 + 0b100 + 0b1000000`.
 
 Now if you remember from Algebra that `(a + b) * c = (a * c) + (b * c)`, you could instead write `uint8_t y = x * 0x45` as: `uint8_t y = (x * 0b1) + (x * 0b100) + (x * 0b1000000)`.
-That still uses multiplications, but since each of those numbers are powers of two, they can be replaced with bit shifts: `uint8_t y = (x << 0) + (x << 2) + (x << 6)`.
+That still uses multiplications, but since each of those numbers are powers of two, they can be replaced with bit-shifts: `uint8_t y = (x << 0) + (x << 2) + (x << 6)`.
 
-Why is this useful? Well if you think back to the original question, what you really want to find is a way to remove all those extra copies of the original number that were added together during the multiplication.
+Why is this useful? Well if you think back to the original question, what you really want to find is a way to remove all those extra bit-shifted copies of the original number that were added together during the multiplication.
 For `0x45`, that means getting rid of the `(x << 2) + (x << 6)`.
 
 ## Carry, carry, carry!
@@ -67,7 +67,7 @@ uint64_t a = 0xDEADBEEFCAFEF00D;
 uint64_t b = a;
 uint64_t c = 1;
 
-// Iterate over all the bits of y, apart from the lowest bit
+// Iterate over all the bits of b, apart from the lowest bit
 // (which represents the original "copy" of the number)
 for (size_t i = 1; i < 64; ++i) {
     // The bit we want to check
@@ -94,7 +94,7 @@ assert(y == (uint64_t)(x * 0xDEADBEEFCAFEF00D));
 printf("0x%016" PRIX64 "\n", x); // 0x1122334455667788
 ```
 
-Note, because `b += a << i` assumes the lowest bit of `a` is set, this will only work for odd numbers.
+However, it is important to note: because `b += a << i` assumes the lowest bit of `a` is set, this will only work when the constant you are multiply by is odd.
 
 ## Conclusion
 While the [modular multiplicative inverse](https://en.wikipedia.org/wiki/Modular_multiplicative_inverse) isn't something unique to binary numbers, thinking about it in binary can provide some useful insights into how binary multiplication works.
