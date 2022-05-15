@@ -28,12 +28,12 @@ That is to say: `0x45 == 0b1 + 0b100 + 0b1000000`.
 Now if you remember from Algebra that `(a + b) * c = (a * c) + (b * c)`, you could instead write `uint8_t y = x * 0x45` as: `uint8_t y = (x * 0b1) + (x * 0b100) + (x * 0b1000000)`.
 That still uses multiplications, but since each of those numbers are powers of two, they can be replaced with bit shifts: `uint8_t y = (x << 0) + (x << 2) + (x << 6)`.
 
-Why is this useful? Well if you think back to the original question, what we really want to find is a way to remove all those extra copies of the original number that were added together during the multiplication.
+Why is this useful? Well if you think back to the original question, what you really want to find is a way to remove all those extra copies of the original number that were added together during the multiplication.
 For `0x45`, that means getting rid of the `(x << 2) + (x << 6)`.
 
 ## Carry, carry, carry!
 
-To get rid of those extra copies, we slowly carry them until they have all overflowed, by adding more copies of the original number we multipled by. For `0x45`:
+To get rid of those extra copies, you can keep carrying them into higher bits (until they have all overflowed), by adding more copies of the original number you multipled by. For example:
 ```c
 uint8_t a = 0b01000101; // 0x45
 uint8_t b = a;
@@ -60,8 +60,8 @@ assert(a == (uint8_t)(b * 0x8D));
 
 ## 0xDEADBEEFCAFEF00D
 
-So, how do we do this for `0xDEADBEEFCAFEF00D`?
-Well, we need to write a loop which iterates over each of the unwanted bits and carries them to a higher bit, until they have all overflowed.
+So, how do you do this for `0xDEADBEEFCAFEF00D`?
+Well, lets write a loop to which iterates over each of the unwanted bits and carries them to a higher bit, until they have all overflowed.
 ```c
 uint64_t a = 0xDEADBEEFCAFEF00D;
 uint64_t b = a;
