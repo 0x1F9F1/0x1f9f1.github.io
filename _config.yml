@@ -1,7 +1,4 @@
 title: "Brick's Blog"
-author: "0x1F9F1"
-description: > # this means to ignore newlines until "baseurl:"
-  The blog of 0x1F9F1
 
 # social links
 github_username:  "0x1F9F1" # DO NOT include the @ character, or else the build will fail!
